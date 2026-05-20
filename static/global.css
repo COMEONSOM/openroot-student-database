@@ -1,0 +1,557 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ============================================================
+   GLOBAL.CSS — Shared design system across all pages
+   Ink · Paper · Deep Blue · Sky · Green · Amber · Red
+   ============================================================ */
+
+/* ── Variables ── */
+:root {
+  --ink:       #0d1117;
+  --ink-90:    #161b22;
+  --ink-80:    #1f2937;
+  --ink-60:    #374151;
+  --ink-40:    #6b7280;
+  --ink-20:    #9ca3af;
+  --ink-10:    #d1d5db;
+
+  --paper:     #ffffff;
+  --paper-50:  #f8fafc;
+  --paper-100: #f1f5f9;
+  --paper-200: #e2e8f0;
+  --paper-300: #cbd5e1;
+
+  --blue-950:  #0c1a3d;
+  --blue-900:  #0f4c81;
+  --blue-800:  #1e3a8a;
+  --blue-700:  #1d4ed8;
+  --blue-600:  #2563eb;
+  --blue-500:  #3b82f6;
+  --blue-50:   #eff6ff;
+
+  --sky-600:   #0284c7;
+  --sky-500:   #0ea5e9;
+  --sky-400:   #38bdf8;
+  --sky-300:   #7dd3fc;
+  --sky-200:   #bae6fd;
+  --sky-50:    #f0f9ff;
+
+  --green-600: #16a34a;
+  --green-500: #22c55e;
+  --green-100: #dcfce7;
+  --green-50:  #f0fdf4;
+
+  --amber-600: #d97706;
+  --amber-500: #f59e0b;
+  --amber-50:  #fffbeb;
+
+  --red-600:   #dc2626;
+  --red-500:   #ef4444;
+  --red-100:   #fee2e2;
+  --red-50:    #fef2f2;
+
+  --purple-50: #f5f3ff;
+  --teal-50:   #f0fdfa;
+
+  --font:      'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --gap-xs:  4px;
+  --gap-sm:  8px;
+  --gap-md:  16px;
+  --gap-lg:  24px;
+  --gap-xl:  32px;
+  --gap-2xl: 48px;
+
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --r-xl: 14px;
+
+  --border:     1px solid var(--paper-200);
+  --border-mid: 1px solid var(--paper-300);
+
+  --container-max: 1200px;
+  --container-pad: clamp(16px, 4vw, 48px);
+
+  /*
+    Height of the .helper-text row that sits beneath the mobile-number
+    input on Search forms. Used to optically lift the Search button so
+    its bottom edge lines up with the input box bottom edge.
+    = font-size(11px) * line-height(1.4) + margin-top(2px) ≈ 17.4 → 21px
+  */
+  --search-btn-offset: 21px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+/* ── Base ── */
+body {
+  font-family: var(--font);
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--paper-50);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a   { color: inherit; text-decoration: none; }
+img, svg { display: block; }
+button, input, select, textarea { font-family: var(--font); }
+button  { cursor: pointer; border: none; background: none; }
+input, select, textarea { outline: none; }
+
+/* ── Layout ── */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: var(--gap-xl) var(--container-pad);
+}
+
+/* ── Back button ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  padding: 6px 12px 6px 8px;
+  border-radius: var(--r-sm);
+  border: var(--border);
+  background-color: var(--paper);
+  margin-bottom: var(--gap-xl);
+  transition: color .15s, border-color .15s, background-color .15s;
+  letter-spacing: .01em;
+}
+.back-btn:hover {
+  color: var(--blue-700);
+  border-color: var(--blue-500);
+  background-color: var(--blue-50);
+}
+.back-btn svg { display: inline; }
+
+/* ── Page header ── */
+.page-header {
+  margin-bottom: var(--gap-xl);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  flex-wrap: wrap;
+}
+.page-header h1,
+.page-header h2,
+.page-title {
+  font-size: clamp(20px, 3.5vw, 32px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -.035em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.page-header p,
+.page-subtitle {
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--ink-40);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* ── Form card ── */
+.form-card {
+  background-color: var(--paper);
+  border: var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+
+/* ── Form section ── */
+.form-section {
+  padding: clamp(20px, 3vw, 32px);
+  border-bottom: var(--border);
+}
+.form-section:last-child { border-bottom: none; }
+
+/* ── Section title ── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: clamp(12px, 1.1vw, 14px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: var(--gap-lg);
+  padding-bottom: var(--gap-md);
+  border-bottom: 2px solid var(--blue-700);
+  width: fit-content;
+}
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.section-icon svg { width: 100%; height: 100%; }
+
+/* ── Field grid ── */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 2vw, 20px);
+}
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.field-full { grid-column: 1 / -1; }
+
+/* ── Labels & text helpers ── */
+label {
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: .02em;
+}
+.required { color: var(--red-500); margin-left: 2px; }
+.hint     { font-size: 11px; font-weight: 500; color: var(--ink-20); margin-left: 2px; }
+.helper-text {
+  font-size: 11px;
+  color: var(--ink-20);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+.error-text {
+  display: none;
+  font-size: 11px;
+  color: var(--red-500);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ── All form controls ── */
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: clamp(8px, 1.2vw, 10px) clamp(10px, 1.5vw, 14px);
+  border: var(--border-mid);
+  border-radius: var(--r-md);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 400;
+  color: var(--ink);
+  background-color: var(--paper);
+  transition: border-color .12s, background-color .12s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue-500);
+  background-color: var(--blue-50);
+}
+input[readonly],
+input:disabled,
+select:disabled {
+  background-color: var(--paper-100);
+  color: var(--ink-40);
+  cursor: not-allowed;
+  border-color: var(--paper-200);
+}
+input.error,
+select.error {
+  border-color: var(--red-500);
+  background-color: var(--red-50);
+}
+input::placeholder { color: var(--ink-10); font-weight: 400; }
+
+/* select chevron */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+select option[value=""] { color: var(--ink-20); }
+
+/* ── Currency / prefix input ── */
+.input-prefix-wrapper {
+  display: flex;
+  align-items: stretch;
+  border: var(--border-mid);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: border-color .12s;
+}
+.input-prefix-wrapper:focus-within { border-color: var(--blue-500); }
+.input-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background-color: var(--paper-100);
+  border-right: var(--border-mid);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 600;
+  color: var(--ink-40);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.input-prefix-wrapper input {
+  border: none;
+  border-radius: 0;
+  flex: 1;
+}
+.input-prefix-wrapper input:focus {
+  border-color: transparent;
+  background-color: var(--blue-50);
+}
+
+/* ── Fees-paid toggle ── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: var(--border-mid);
+  border-radius: var(--r-md);
+  background-color: var(--paper-50);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color .12s, background-color .12s;
+}
+.toggle-row.paid            { border-color: #86efac; background-color: var(--green-50); }
+.toggle-label-text          { font-size: clamp(12px, 1vw, 13px); font-weight: 600; color: var(--ink-60); }
+.toggle-row.paid .toggle-label-text { color: var(--green-600); }
+
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.toggle-switch input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.toggle-track {
+  display: block;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: var(--paper-300);
+  border: 1px solid var(--ink-10);
+  transition: background-color .2s;
+}
+.toggle-switch input:checked ~ .toggle-track  { background-color: var(--green-500); border-color: var(--green-500); }
+
+.toggle-thumb {
+  position: absolute;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--paper);
+  border: 1px solid var(--paper-300);
+  transition: transform .2s;
+}
+.toggle-switch input:checked ~ .toggle-thumb  { transform: translateX(18px); border-color: transparent; }
+
+/* ── Message box ── */
+.msg-box {
+  display: none;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: clamp(12px, 1vw, 13px);
+  line-height: 1.5;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.msg-box.success { display: flex; background-color: var(--green-50);  border-color: #86efac;         color: var(--green-600); }
+.msg-box.error   { display: flex; background-color: var(--red-50);    border-color: #fca5a5;         color: var(--red-600);   }
+.msg-box.info,
+.msg-box.loading { display: flex; background-color: var(--sky-50);    border-color: var(--sky-200);  color: var(--sky-600);   }
+.msg-box.warning { display: flex; background-color: var(--amber-50);  border-color: #fcd34d;         color: var(--amber-600); }
+
+/* ── Form footer ── */
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  padding: clamp(16px, 2.5vw, 24px) clamp(20px, 3vw, 32px);
+  background-color: var(--paper-50);
+  border-top: var(--border);
+  flex-wrap: wrap;
+}
+.footer-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+/* ── Buttons ── */
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: clamp(8px, 1.2vw, 10px) clamp(14px, 2vw, 20px);
+  border-radius: var(--r-md);
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 600;
+  letter-spacing: .01em;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color .12s, border-color .12s, color .12s;
+}
+.btn-primary {
+  background-color: var(--blue-700);
+  color: var(--paper);
+  border: 1px solid var(--blue-700);
+}
+.btn-primary:hover  { background-color: var(--blue-800); border-color: var(--blue-800); }
+.btn-primary:active { background-color: var(--blue-950); }
+
+.btn-secondary {
+  background-color: var(--paper);
+  color: var(--ink-60);
+  border: var(--border-mid);
+}
+.btn-secondary:hover { background-color: var(--paper-100); border-color: var(--ink-10); color: var(--ink); }
+
+.btn-danger {
+  background-color: var(--red-600);
+  color: var(--paper);
+  border: 1px solid var(--red-600);
+}
+.btn-danger:hover  { background-color: #b91c1c; border-color: #b91c1c; }
+.btn-danger:active { background-color: #7f1d1d; }
+
+/* ── Section divider ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  margin: var(--gap-xl) 0 var(--gap-md);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-40);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--paper-200);
+}
+
+/* ── Found banner ── */
+.found-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 10px 16px;
+  background-color: var(--green-50);
+  border: 1px solid #86efac;
+  border-left: 3px solid var(--green-500);
+  border-radius: var(--r-md);
+  font-size: clamp(12px, 1vw, 13px);
+  color: var(--green-600);
+  margin-bottom: var(--gap-md);
+}
+.found-banner strong { color: var(--ink); }
+
+/* ── Inline search row (.form-find)
+   Apply class="form-find" to any <form> that has a mobile
+   input + search button side-by-side (Update & Delete pages).
+   Aligns the bottom of the button with the bottom of the input,
+   accounting for the .helper-text row beneath the input.
+   ── */
+.form-find .field-grid {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(16px, 2.5vw, 32px);
+  align-items: end;
+}
+.form-find .field-group:last-child { justify-content: flex-end; }
+/* hide the invisible alignment label from layout/screen readers */
+.form-find .field-group:last-child > label { visibility: hidden; }
+/* lift button up by the helper-text row height so edges align */
+.form-find .btn-primary {
+  width: 220px;
+  margin-bottom: var(--search-btn-offset);
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  :root { --container-pad: 16px; }
+
+  .field-grid { grid-template-columns: 1fr; }
+
+  .form-footer { flex-direction: column; align-items: stretch; }
+  .btn-group   { flex-direction: column-reverse; }
+  .btn-group .btn { width: 100%; justify-content: center; }
+
+  .page-header { flex-direction: column; }
+
+  /* reset search row to single column */
+  .form-find .field-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .form-find .field-group:last-child > label { display: none; }
+  .form-find .btn-primary { width: 100%; margin-bottom: 0; }
+}
+
+@media (max-width: 359px) {
+  :root { --container-pad: 12px; }
+  .btn-group { flex-direction: column; }
+  .btn-group .btn { width: 100%; }
+}
+
+@media (min-width: 1024px) {
+  :root { --container-pad: 32px; }
+  .field-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1280px) { :root { --container-max: 1200px; --container-pad: 40px; } }
+@media (min-width: 1440px) { :root { --container-max: 1280px; --container-pad: 48px; } }
+@media (min-width: 1920px) {
+  :root { --container-max: 1440px; --container-pad: 64px; }
+  body { font-size: 16px; }
+  .form-section { padding: 40px; }
+}
+
+/* ── Print ── */
+@media print {
+  .back-btn, .form-footer { display: none; }
+  .container { padding: 0; }
+}

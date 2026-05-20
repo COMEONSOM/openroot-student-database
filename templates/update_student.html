@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search &amp; Update Student — Student DB</title>
+     <link rel="icon" type="image/x-icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='update_student.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <a href="#" class="back-btn"  onclick="goDashboard(); return false;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+    </a>
+
+    <div class="page-header">
+        <h2>Search &amp; Update Student</h2>
+        <p>Search by mobile number, then edit personal, contact, enrollment, course, and address details.</p>
+    </div>
+
+    <!-- Search -->
+    <div class="form-card">
+        <div class="form-section">
+            <div class="section-title">
+                <span class="section-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </span>
+                Step 1 — Find Student
+            </div>
+
+            <form id="searchStudentForm" class="form-find" novalidate>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="search_mobile_number">
+                            Mobile Number <span class="required">*</span>
+                        </label>
+                        <input
+                            type="tel"
+                            id="search_mobile_number"
+                            placeholder="Enter 10-digit mobile number"
+                            maxlength="10"
+                            inputmode="numeric"
+                            pattern="[0-9]{10}"
+                            required
+                        >
+                        <span class="helper-text">Unique mobile number registered with the student</span>
+                        <span class="error-text" id="err_search_mobile">Enter a valid 10-digit mobile number.</span>
+                    </div>
+                    <div class="field-group">
+                        <label style="visibility:hidden;">Search</label>
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            Search Student
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="padding:0 32px 20px;">
+            <div class="msg-box" id="searchMessageBox"></div>
+        </div>
+    </div>
+
+    <!-- Edit -->
+    <div id="updateContainer">
+        <div class="section-divider">
+            <span>✏️ &nbsp;Step 2 — Edit Details</span>
+        </div>
+
+        <div class="found-banner" id="foundBanner">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#22c55e" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Student found: <strong id="foundName"></strong> — update the fields below and save.</span>
+        </div>
+
+        <div class="form-card">
+            <form id="updateStudentForm" novalidate>
+
+                <!-- Personal -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </span>
+                        Personal Information
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label for="update_enrollment_no">
+                                Enrollment No. <span class="hint">(read-only)</span>
+                            </label>
+                            <input type="text" id="update_enrollment_no" readonly>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_student_name">Full Name <span class="required">*</span></label>
+                            <input type="text" id="update_student_name" maxlength="60" required>
+                            <span class="error-text" id="err_upd_name">Please enter the student's name.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_date_of_birth">Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="update_date_of_birth" required>
+                            <span class="error-text" id="err_upd_dob">Please select a valid date of birth.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_address">Address <span class="hint">(combined)</span></label>
+                            <input type="text" id="update_address" placeholder="Auto-built from address dropdowns" readonly>
+                            <span class="helper-text">Stored as one combined address in the database</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07
+                                         A19.5 19.5 0 0 1 4.15 12 19.79 19.79 0 0 1 1.08 3.4
+                                         A2 2 0 0 1 3.05 1.2h3a2 2 0 0 1 2 1.72
+                                         12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 9.6
+                                         a16 16 0 0 0 6.31 6.31l1.27-1.27a2 2 0 0 1 2.11-.45
+                                         12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 17"/>
+                            </svg>
+                        </span>
+                        Contact Details
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label for="update_mobile_number">Mobile Number <span class="required">*</span></label>
+                            <input type="tel" id="update_mobile_number" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" required>
+                            <span class="helper-text">Must be unique · 10 digits</span>
+                            <span class="error-text" id="err_upd_mobile">Enter a valid 10-digit number.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="update_email" placeholder="student@example.com" required>
+                            <span class="helper-text">Must be unique</span>
+                            <span class="error-text" id="err_upd_email">Enter a valid email address.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enrollment -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8"  y1="2" x2="8"  y2="6"/>
+                                <line x1="3"  y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </span>
+                        Enrollment Details
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label for="update_enrollment_date">Enrollment Date <span class="required">*</span></label>
+                            <input type="date" id="update_enrollment_date" required>
+                            <span class="error-text" id="err_upd_enroll">Please select an enrollment date.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 21s6-5.5 6-11a6 6 0 0 0-12 0c0 5.5 6 11 6 11z"/>
+                                <circle cx="12" cy="10" r="2"/>
+                            </svg>
+                        </span>
+                        Address Details
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label for="update_state">State <span class="required">*</span></label>
+                            <select id="update_state" required>
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_district">District <span class="required">*</span></label>
+                            <select id="update_district" required disabled>
+                                <option value="">Select District</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_assembly_constituency">Assembly Constituency <span class="required">*</span></label>
+                            <select id="update_assembly_constituency" required disabled>
+                                <option value="">Select Assembly Constituency</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_pincode">Pincode <span class="required">*</span></label>
+                            <input
+                                type="text"
+                                id="update_pincode"
+                                placeholder="6-digit pincode"
+                                maxlength="6"
+                                inputmode="numeric"
+                                required
+                            >
+                            <span class="error-text" id="err_upd_pincode">Please enter a valid 6-digit pincode.</span>
+                        </div>
+
+                        <input type="hidden" id="update_hidden_address">
+                    </div>
+                </div>
+
+                <!-- Course -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                            </svg>
+                        </span>
+                        Course Details
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label for="update_course_id">Course ID <span class="hint">(read-only)</span></label>
+                            <input type="text" id="update_course_id" readonly>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_course_name">Course Name <span class="required">*</span></label>
+                            <select id="update_course_name" required>
+                                <option value="">Select Course</option>
+                                <option value="Prompt Engineering">Prompt Engineering</option>
+                                <option value="Personal Finance & Investing">Personal Finance & Investing</option>
+                            </select>
+                            <span class="error-text" id="err_upd_course">Please select a valid course.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_fees_structure">Total Fees (₹) <span class="required">*</span></label>
+                            <div class="input-prefix-wrapper">
+                                <span class="input-prefix">₹</span>
+                                <input
+                                    type="text"
+                                    id="update_fees_structure"
+                                    placeholder="0.00"
+                                    inputmode="decimal"
+                                    maxlength="12"
+                                    required
+                                >
+                            </div>
+                            <span class="error-text" id="err_upd_fees">Enter a valid fee amount.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_course_duration">Course Duration <span class="hint">(optional)</span></label>
+                            <select id="update_course_duration">
+                                <option value="">Select Course Duration</option>
+                                <option value="1 month">1 month</option>
+                                <option value="2 months">2 months</option>
+                                <option value="6 months">6 months</option>
+                                <option value="1 year">1 year</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_course_start_date">Start Date <span class="hint">(optional)</span></label>
+                            <input type="date" id="update_course_start_date">
+                            <span class="error-text" id="err_upd_dates">Start date must be before end date.</span>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="update_course_end_date">End Date <span class="hint">(optional)</span></label>
+                            <input type="date" id="update_course_end_date">
+                        </div>
+
+                        <div class="field-group field-full">
+                            <label>Fees Paid Status</label>
+                            <label class="toggle-row" id="updateToggleRow" for="update_fees_paid">
+                                <span class="toggle-label-text" id="updateToggleLabel">Fees Not Paid</span>
+                                <span class="toggle-switch">
+                                    <input type="checkbox" id="update_fees_paid">
+                                    <span class="toggle-track"></span>
+                                    <span class="toggle-thumb"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding:0 32px 8px;">
+                    <div class="msg-box" id="updateMessageBox"></div>
+                </div>
+
+                <div class="form-footer">
+                    <p class="footer-note">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8"  x2="12"   y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        Changes affect both <strong style="color:#1e293b;">students</strong> and
+                        <strong style="color:#1e293b;">courses</strong> tables
+                    </p>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="cancelUpdate()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let UPDATE_GEO_DATA = [];
+    let UPDATE_PENDING_ADDRESS = "";
+    let UPDATE_ORIGINAL_MOBILE = "";
+
+    function showMsg(elId, type, text) {
+        const box = document.getElementById(elId);
+        if (!box) return;
+        box.className = "msg-box " + type;
+        box.innerHTML = text;
+        box.style.display = "flex";
+    }
+
+    function hideMsg(elId) {
+        const box = document.getElementById(elId);
+        if (!box) return;
+        box.className = "msg-box";
+        box.innerHTML = "";
+        box.style.display = "none";
+    }
+
+    async function fetchJSON(url, options = {}) {
+        const response = await fetch(url, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            },
+            ...options
+        });
+
+        let data = null;
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error("Server returned an invalid response.");
+        }
+
+        if (!response.ok) {
+            throw new Error(data?.message || "Something went wrong.");
+        }
+
+        return data;
+    }
+
+    function normalizeMobile(mobile) {
+        return String(mobile || "").replace(/\D/g, "").slice(0, 10);
+    }
+
+    function isValidEnglishName(value) {
+        return /^[A-Za-z ]{1,60}$/.test(String(value || "").trim());
+    }
+
+    function isValidEmail(value) {
+        const text = String(value || "").trim();
+        return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(text);
+    }
+
+    function isValidMoney(value) {
+        return /^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(String(value || "").trim());
+    }
+
+    function isValidPinCode(value) {
+        return /^\d{6}$/.test(String(value || "").trim());
+    }
+
+    function isAtLeast18(dobValue) {
+        if (!dobValue) return false;
+        const dob = new Date(dobValue);
+        if (Number.isNaN(dob.getTime())) return false;
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
+        return age >= 18;
+    }
+
+    function isNotFuture(value) {
+        if (!value) return false;
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return false;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        d.setHours(0, 0, 0, 0);
+        return d <= today;
+    }
+
+    function vf(id, ok, errId) {
+        const el = document.getElementById(id);
+        const err = errId ? document.getElementById(errId) : null;
+        if (el) el.classList.toggle("error", !ok);
+        if (err) err.style.display = ok ? "none" : "block";
+        return ok;
+    }
+
+    function getValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+    }
+
+    function setValue(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value ?? "";
+    }
+
+    function fillSelect(selectEl, items, placeholder) {
+        if (!selectEl) return;
+        selectEl.innerHTML = "";
+        const opt0 = document.createElement("option");
+        opt0.value = "";
+        opt0.textContent = placeholder;
+        selectEl.appendChild(opt0);
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item;
+            option.textContent = item;
+            selectEl.appendChild(option);
+        });
+    }
+
+    function getStateEntries() {
+        return Array.isArray(UPDATE_GEO_DATA) ? UPDATE_GEO_DATA : [];
+    }
+
+    function getStates() {
+        return [...new Set(getStateEntries().map(item => item.state))].sort();
+    }
+
+    function getDistrictsByState(stateName) {
+        const stateEntry = getStateEntries().find(item => item.state === stateName);
+        return stateEntry ? [...stateEntry.districts].sort() : [];
+    }
+
+    function getACsByState(stateName) {
+        const stateEntry = getStateEntries().find(item => item.state === stateName);
+        if (!stateEntry || !Array.isArray(stateEntry.assembly_constituencies)) return [];
+        return [...new Set(
+            stateEntry.assembly_constituencies
+                .map(ac => ac.assembly_constituency_name)
+                .filter(Boolean)
+        )].sort();
+    }
+
+    function parseCombinedAddress(address) {
+        const text = String(address || "").trim();
+        if (!text) return { ac: "", district: "", state: "", pincode: "" };
+        const match = text.match(/^(.*),\s*(.*),\s*(.*)\s*-\s*(\d{6})$/);
+        if (!match) return { ac: "", district: "", state: "", pincode: "" };
+        return {
+            ac: match[1].trim(),
+            district: match[2].trim(),
+            state: match[3].trim(),
+            pincode: match[4].trim()
+        };
+    }
+
+    function rebuildUpdateAddress() {
+        const state = getValue("update_state");
+        const district = getValue("update_district");
+        const ac = getValue("update_assembly_constituency");
+        const pincode = getValue("update_pincode");
+        const hidden = document.getElementById("update_hidden_address");
+        const display = document.getElementById("update_address");
+
+        const combined =
+            state && district && ac && isValidPinCode(pincode)
+                ? `${ac}, ${district}, ${state} - ${pincode}`
+                : "";
+
+        if (hidden) hidden.value = combined;
+        if (display) display.value = combined;
+        return combined;
+    }
+
+    function syncUpdateDropdownsFromParsedAddress(parsed) {
+        const stateEl = document.getElementById("update_state");
+        const districtEl = document.getElementById("update_district");
+        const acEl = document.getElementById("update_assembly_constituency");
+        const pinEl = document.getElementById("update_pincode");
+
+        if (!stateEl || !districtEl || !acEl || !pinEl) return;
+        if (!parsed || !parsed.state) return;
+
+        stateEl.value = parsed.state;
+
+        const districts = getDistrictsByState(parsed.state);
+        fillSelect(districtEl, districts, "Select District");
+        districtEl.disabled = !districts.length;
+        districtEl.value = parsed.district || "";
+
+        const acs = getACsByState(parsed.state);
+        fillSelect(acEl, acs, "Select Assembly Constituency");
+        acEl.disabled = !acs.length;
+        acEl.value = parsed.ac || "";
+
+        pinEl.value = parsed.pincode || "";
+        rebuildUpdateAddress();
+    }
+
+    async function loadUpdateGeoData() {
+        try {
+            const response = await fetch("/static/indiaGeoData.json");
+            if (!response.ok) throw new Error("Failed to load indiaGeoData.json");
+            UPDATE_GEO_DATA = await response.json();
+
+            const stateEl = document.getElementById("update_state");
+            const districtEl = document.getElementById("update_district");
+            const acEl = document.getElementById("update_assembly_constituency");
+            if (stateEl && districtEl && acEl) {
+                fillSelect(stateEl, getStates(), "Select State");
+                districtEl.disabled = true;
+                acEl.disabled = true;
+            }
+
+            if (UPDATE_PENDING_ADDRESS) {
+                syncUpdateDropdownsFromParsedAddress(parseCombinedAddress(UPDATE_PENDING_ADDRESS));
+                UPDATE_PENDING_ADDRESS = "";
+            }
+        } catch (error) {
+            console.error("Geo Data Load Error:", error);
+        }
+    }
+
+    function initializeUpdateAddressHandlers() {
+        const stateEl = document.getElementById("update_state");
+        const districtEl = document.getElementById("update_district");
+        const acEl = document.getElementById("update_assembly_constituency");
+        const pinEl = document.getElementById("update_pincode");
+
+        if (!stateEl || !districtEl || !acEl || !pinEl) return;
+
+        stateEl.addEventListener("change", function () {
+            const districts = getDistrictsByState(this.value);
+            fillSelect(districtEl, districts, "Select District");
+            districtEl.disabled = !districts.length;
+            fillSelect(acEl, [], "Select Assembly Constituency");
+            acEl.disabled = true;
+            rebuildUpdateAddress();
+        });
+
+        districtEl.addEventListener("change", function () {
+            const acs = getACsByState(stateEl.value);
+            fillSelect(acEl, acs, "Select Assembly Constituency");
+            acEl.disabled = !acs.length;
+            rebuildUpdateAddress();
+        });
+
+        acEl.addEventListener("change", rebuildUpdateAddress);
+
+        pinEl.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "").slice(0, 6);
+            rebuildUpdateAddress();
+        });
+    }
+
+    function populateUpdateForm(student, course) {
+        if (!student) {
+            showMsg("searchMessageBox", "error", "No student found with this mobile number.");
+            document.getElementById("updateContainer").style.display = "none";
+            return;
+        }
+
+        document.getElementById("updateContainer").style.display = "block";
+        document.getElementById("foundName").textContent = student.student_name || "";
+
+        setValue("update_enrollment_no", student.enrollment_no || "");
+        setValue("update_student_name", student.student_name || "");
+        setValue("update_date_of_birth", student.date_of_birth || "");
+        setValue("update_mobile_number", student.mobile_number || "");
+        setValue("update_email", student.email || "");
+        setValue("update_enrollment_date", student.enrollment_date || "");
+
+        UPDATE_ORIGINAL_MOBILE = normalizeMobile(student.mobile_number);
+
+        const address = student.address || "";
+        setValue("update_address", address);
+        setValue("update_hidden_address", address);
+
+        if (UPDATE_GEO_DATA.length) {
+            syncUpdateDropdownsFromParsedAddress(parseCombinedAddress(address));
+        } else {
+            UPDATE_PENDING_ADDRESS = address;
+        }
+
+        if (course) {
+            setValue("update_course_id", course.course_id || "");
+            setValue("update_course_name", course.course_name || "");
+            setValue("update_fees_structure", course.fees_structure || "");
+            setValue("update_course_duration", course.course_duration || "");
+            setValue("update_course_start_date", course.course_start_date || "");
+            setValue("update_course_end_date", course.course_end_date || "");
+
+            const paid = !!course.fees_paid;
+            document.getElementById("update_fees_paid").checked = paid;
+            document.getElementById("updateToggleRow").classList.toggle("paid", paid);
+            document.getElementById("updateToggleLabel").textContent = paid ? "Fees Paid" : "Fees Not Paid";
+        }
+
+        document.getElementById("updateContainer").scrollIntoView({ behavior: "smooth", block: "start" });
+        showMsg("searchMessageBox", "success", `Student <strong>${student.student_name}</strong> found. Edit the details below.`);
+    }
+
+    function cancelUpdate() {
+        document.getElementById("updateContainer").style.display = "none";
+        document.getElementById("search_mobile_number").value = "";
+        hideMsg("searchMessageBox");
+    }
+
+    async function searchStudent(mobile, cb) {
+        const result = await fetchJSON(`/api/student/${encodeURIComponent(mobile)}`);
+        cb(result.student || null, result.course || null);
+    }
+
+    async function updateStudent(payload) {
+        const mobile = UPDATE_ORIGINAL_MOBILE || normalizeMobile(payload?.student?.mobile_number);
+        const result = await fetchJSON(`/api/student/${encodeURIComponent(mobile)}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                student_name: payload.student.student_name,
+                date_of_birth: payload.student.date_of_birth,
+                mobile_number: payload.student.mobile_number,
+                email: payload.student.email,
+                enrollment_date: payload.student.enrollment_date,
+                address: payload.student.address,
+                state: getValue("update_state"),
+                district: getValue("update_district"),
+                assembly_constituency: getValue("update_assembly_constituency"),
+                pincode: getValue("update_pincode"),
+                course_id: payload.course.course_id,
+                course_name: payload.course.course_name,
+                fees_structure: payload.course.fees_structure,
+                fees_paid: payload.course.fees_paid ? 1 : 0,
+                course_duration: payload.course.course_duration,
+                course_start_date: payload.course.course_start_date,
+                course_end_date: payload.course.course_end_date
+            })
+        });
+        showMsg("updateMessageBox", "success", result.message || "Updated successfully.");
+        return result;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        const mobiles = ["search_mobile_number", "update_mobile_number", "update_pincode"];
+        mobiles.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener("input", function () {
+                    this.value = this.value.replace(/\D/g, "").slice(0, id === "update_pincode" ? 6 : 10);
+                });
+            }
+        });
+
+        const nameEl = document.getElementById("update_student_name");
+        if (nameEl) {
+            nameEl.addEventListener("input", function () {
+                this.value = this.value.replace(/[^A-Za-z ]/g, "").slice(0, 60);
+            });
+        }
+
+        const feeFields = ["update_fees_structure"];
+        feeFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener("input", function () {
+                    this.value = this.value.replace(/[^0-9.]/g, "");
+                    const parts = this.value.split(".");
+                    if (parts.length > 2) this.value = `${parts[0]}.${parts.slice(1).join("")}`;
+                    if (parts[1] && parts[1].length > 2) this.value = `${parts[0]}.${parts[1].slice(0, 2)}`;
+                });
+                el.addEventListener("keydown", function (event) {
+                    if (["e", "E", "+", "-"].includes(event.key)) event.preventDefault();
+                });
+            }
+        });
+
+        const feesPaid = document.getElementById("update_fees_paid");
+        if (feesPaid) {
+            feesPaid.addEventListener("change", function () {
+                document.getElementById("updateToggleRow").classList.toggle("paid", this.checked);
+                document.getElementById("updateToggleLabel").textContent = this.checked ? "Fees Paid" : "Fees Not Paid";
+            });
+        }
+
+        initializeUpdateAddressHandlers();
+        await loadUpdateGeoData();
+
+        const searchForm = document.getElementById("searchStudentForm");
+        searchForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const mobile = normalizeMobile(getValue("search_mobile_number"));
+            if (!vf("search_mobile_number", /^[0-9]{10}$/.test(mobile), "err_search_mobile")) return;
+
+            showMsg("searchMessageBox", "info", "Searching…");
+            try {
+                await searchStudent(mobile, populateUpdateForm);
+            } catch (error) {
+                showMsg("searchMessageBox", "error", error.message);
+                document.getElementById("updateContainer").style.display = "none";
+            }
+        });
+
+        const updateForm = document.getElementById("updateStudentForm");
+        updateForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const name = getValue("update_student_name");
+            const dob = getValue("update_date_of_birth");
+            const mobile = normalizeMobile(getValue("update_mobile_number"));
+            const email = getValue("update_email");
+            const enrollDate = getValue("update_enrollment_date");
+            const courseName = getValue("update_course_name");
+            const fees = getValue("update_fees_structure");
+            const courseId = getValue("update_course_id");
+            const duration = getValue("update_course_duration");
+            const startDate = getValue("update_course_start_date");
+            const endDate = getValue("update_course_end_date");
+            const address = rebuildUpdateAddress();
+
+            let valid = true;
+            valid = vf("update_student_name", isValidEnglishName(name), "err_upd_name") && valid;
+            valid = vf("update_date_of_birth", isAtLeast18(dob), "err_upd_dob") && valid;
+            valid = vf("update_mobile_number", /^[0-9]{10}$/.test(mobile), "err_upd_mobile") && valid;
+            valid = vf("update_email", isValidEmail(email), "err_upd_email") && valid;
+            valid = vf("update_enrollment_date", isNotFuture(enrollDate), "err_upd_enroll") && valid;
+            valid = vf("update_course_name", Boolean(courseName), "err_upd_course") && valid;
+            valid = vf("update_fees_structure", isValidMoney(fees), "err_upd_fees") && valid;
+            valid = vf("update_pincode", isValidPinCode(getValue("update_pincode")), "err_upd_pincode") && valid;
+            valid = vf("update_address", Boolean(address), null) && valid;
+
+            if (startDate && endDate && startDate >= endDate) {
+                document.getElementById("update_course_start_date").classList.add("error");
+                document.getElementById("err_upd_dates").style.display = "block";
+                valid = false;
+            } else {
+                document.getElementById("update_course_start_date").classList.remove("error");
+                document.getElementById("err_upd_dates").style.display = "none";
+            }
+
+            if (!valid) {
+                showMsg("updateMessageBox", "error", "Please fix the highlighted fields.");
+                return;
+            }
+
+            showMsg("updateMessageBox", "info", "Saving changes…");
+
+            try {
+                await updateStudent({
+                    enrollment_no: getValue("update_enrollment_no"),
+                    student: {
+                        student_name: name,
+                        date_of_birth: dob,
+                        mobile_number: mobile,
+                        email,
+                        address,
+                        enrollment_date: enrollDate
+                    },
+                    course: {
+                        course_id: courseId ? parseInt(courseId, 10) : null,
+                        course_name: courseName,
+                        fees_structure: fees,
+                        fees_paid: document.getElementById("update_fees_paid").checked,
+                        course_duration: duration || null,
+                        course_start_date: startDate || null,
+                        course_end_date: endDate || null
+                    }
+                });
+
+                showMsg("updateMessageBox", "success", "Student and course details updated successfully.");
+            } catch (error) {
+                showMsg("updateMessageBox", "error", error.message);
+            }
+        });
+    });
+</script>
+<script>
+function goDashboard(){
+    window.location.replace("/dashboard");
+}
+</script>
+</body>
+</html>

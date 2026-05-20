@@ -1,0 +1,20 @@
+/* ============================================================
+   ADD_STUDENT.CSS — Isolated styles for Add Student page only
+   All shared styles live in global.css
+   ============================================================ */
+
+/* Auto-generated field badge (Enrollment No., Course ID) */
+.badge-auto {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--r-xs);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background-color: var(--sky-50);
+  color: var(--sky-600);
+  border: 1px solid var(--sky-200);
+  margin-left: 6px;
+}

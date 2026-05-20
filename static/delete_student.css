@@ -1,0 +1,181 @@
+/* ============================================================
+   DELETE_STUDENT.CSS — Isolated styles for Delete Student page
+   All shared styles live in global.css
+   ============================================================ */
+
+/* Step 2 review panel hidden until a student is found */
+#deleteContainer {
+  display: none;
+}
+
+/* ── Danger card (red-accented preview card) ── */
+.danger-card {
+  border-color: #fca5a5;
+  border-top: 3px solid var(--red-500);
+}
+
+/* ── Student preview header ── */
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  padding: clamp(16px, 2.5vw, 24px) clamp(20px, 3vw, 28px);
+  border-bottom: var(--border);
+  background-color: var(--paper-50);
+}
+.avatar-circle {
+  width: clamp(44px, 5vw, 56px);
+  height: clamp(44px, 5vw, 56px);
+  background-color: var(--paper-100);
+  border: var(--border-mid);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(20px, 2.5vw, 26px);
+  flex-shrink: 0;
+}
+.preview-header h2 {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.025em;
+  line-height: 1.2;
+}
+.preview-header p {
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+
+/* ── Preview grid ── */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.8vw, 18px);
+  padding: clamp(16px, 2.5vw, 24px) clamp(20px, 3vw, 28px);
+}
+.preview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px;
+  border: var(--border);
+  border-radius: var(--r-lg);
+  background-color: var(--paper-50);
+}
+.preview-item.full-width { grid-column: 1 / -1; }
+
+.preview-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-20);
+}
+.preview-value {
+  font-size: clamp(12px, 1.1vw, 14px);
+  font-weight: 500;
+  color: var(--ink);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* ── Paid / Unpaid badges ── */
+.paid-badge,
+.unpaid-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: var(--r-xs);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.paid-badge   { background-color: var(--green-100); color: var(--green-600); border: 1px solid #86efac; }
+.unpaid-badge { background-color: var(--red-100);   color: var(--red-600);   border: 1px solid #fca5a5; }
+
+/* ── Danger warning bar ── */
+.danger-warning {
+  margin: 0 clamp(20px, 3vw, 28px);
+  padding: 10px 14px;
+  background-color: var(--red-50);
+  border: 1px solid #fca5a5;
+  border-radius: var(--r-md);
+  font-size: clamp(12px, 1vw, 13px);
+  font-weight: 600;
+  color: var(--red-600);
+  text-align: center;
+}
+
+/* ── Action row (Cancel + Delete buttons) ── */
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-sm);
+  padding: clamp(16px, 2.5vw, 20px) clamp(20px, 3vw, 28px);
+  border-top: var(--border);
+  background-color: var(--paper-50);
+  flex-wrap: wrap;
+}
+.action-row .btn { min-width: 156px; }
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .preview-header { align-items: flex-start; }
+
+  .preview-grid { grid-template-columns: 1fr; }
+
+  .action-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .action-row .btn {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+}
+
+/* ── Delete page message styling only ── */
+
+#deleteMessageBox{
+  padding:0 !important;
+  border:none !important;
+  background:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+
+  display:flex;
+  align-items:center;     /* vertical centering */
+  min-height:36px;
+
+  line-height:1.5;
+}
+
+/* Success */
+#deleteMessageBox.success{
+  color:var(--green-600);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}
+
+/* Error / Warning */
+#deleteMessageBox.error,
+#deleteMessageBox.warning{
+  color:var(--red-500);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}
+
+/* Loading / info */
+#deleteMessageBox.info,
+#deleteMessageBox.loading{
+  color:var(--blue-600);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}

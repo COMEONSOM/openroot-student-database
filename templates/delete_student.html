@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Delete Student</title>
+     <link rel="icon" type="image/x-icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='delete_student.css') }}" />
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="#" class="back-btn"  onclick="goDashboard(); return false;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Dashboard
+    </a>
+
+    <div class="page-header">
+        <div>
+            <h1>Delete Student</h1>
+            <p>
+                Search a student using mobile number and permanently remove the record.
+            </p>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <div class="form-section">
+            <div class="section-title">
+                <span class="section-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="#0f4c81" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                    </svg>
+                </span>
+                Step 1 — Find Student
+            </div>
+
+            <form id="deleteStudentForm" class="form-find" novalidate>
+                <div class="field-grid">
+                    <div class="field-group">
+                        <label for="delete_mobile_number">
+                            Mobile Number <span class="required">*</span>
+                        </label>
+                        <input
+                            type="tel"
+                            id="delete_mobile_number"
+                            placeholder="Enter 10-digit mobile number"
+                            maxlength="10"
+                            inputmode="numeric"
+                            required
+                        />
+                        <span class="helper-text">Only registered mobile numbers can be searched.</span>
+                        <span class="error-text" id="err_delete_mobile">Enter a valid 10-digit mobile number.</span>
+                    </div>
+
+                    <div class="field-group" id="deleteSearchButtonGroup">
+                        <label style="visibility:hidden;">Search</label>
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            Search Student
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="padding:0 32px 20px;">
+            <div class="msg-box" id="deleteMessageBox"></div>
+        </div>
+    </div>
+
+    <div id="studentPreview" style="display:none;">
+
+        <div class="section-divider">
+            <span>🗑️ &nbsp;Step 2 — Review Details</span>
+        </div>
+
+        <div class="found-banner" id="foundBanner" style="display:none;">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#22c55e" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Student found: <strong id="foundName"></strong> — review the details below before deleting.</span>
+        </div>
+
+        <div class="glass-card danger-card">
+
+            <div class="preview-header">
+                <div class="avatar-circle">👤</div>
+                <div>
+                    <h2 id="del_student_name">—</h2>
+                    <p>
+                        Enrollment No:
+                        <strong id="del_enrollment_no">—</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="preview-grid">
+                <div class="preview-item">
+                    <span class="preview-label">Date of Birth</span>
+                    <span class="preview-value" id="del_date_of_birth">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Mobile Number</span>
+                    <span class="preview-value" id="del_mobile_number">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Email Address</span>
+                    <span class="preview-value" id="del_email">—</span>
+                </div>
+
+                <div class="preview-item full-width">
+                    <span class="preview-label">Address</span>
+                    <span class="preview-value" id="del_address">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Enrollment Date</span>
+                    <span class="preview-value" id="del_enrollment_date">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Course Name</span>
+                    <span class="preview-value" id="del_course_name">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Course Duration</span>
+                    <span class="preview-value" id="del_course_duration">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Fees Structure</span>
+                    <span class="preview-value" id="del_fees_structure">—</span>
+                </div>
+
+                <div class="preview-item">
+                    <span class="preview-label">Fees Status</span>
+                    <span class="preview-value" id="del_fees_paid">—</span>
+                </div>
+            </div>
+
+            <div class="danger-warning">
+                ⚠️ This action cannot be undone.
+            </div>
+
+            <div class="action-row">
+                <button type="button" class="btn btn-secondary" onclick="cancelDelete()">
+                    Cancel
+                </button>
+
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+                    Permanently Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+document
+    .getElementById('deleteStudentForm')
+    .addEventListener(
+        'submit',
+        async function (event) {
+            event.preventDefault();
+
+            const mobile =
+                document
+                    .getElementById('delete_mobile_number')
+                    .value
+                    .trim();
+
+            if (!/^[0-9]{10}$/.test(mobile)) {
+                showMsg(
+                    'deleteMessageBox',
+                    'warning',
+                    'Please enter a valid 10-digit mobile number.'
+                );
+                return;
+            }
+
+            showMsg(
+                'deleteMessageBox',
+                'loading',
+                'Searching student record...'
+            );
+
+            try {
+                await searchStudent(
+                    mobile,
+                    populatePreview
+                );
+            } catch (error) {
+                console.error(error);
+                showMsg(
+                    'deleteMessageBox',
+                    'error',
+                    error.message || 'Unable to search student.'
+                );
+            }
+        }
+    );
+
+// ============================================================
+// PREVIEW
+// ============================================================
+
+function populatePreview(data) {
+    const preview = document.getElementById('studentPreview');
+    const banner = document.getElementById('foundBanner');
+    const foundName = document.getElementById('foundName');
+
+    if (!data) {
+        showMsg(
+            'deleteMessageBox',
+            'warning',
+            'No student found with this mobile number.'
+        );
+        preview.style.display = 'none';
+        banner.style.display = 'none';
+        return;
+    }
+
+    preview.style.display = 'block';
+    banner.style.display = 'flex';
+    foundName.textContent = data.student_name || '—';
+
+    document.getElementById('del_student_name').textContent =
+        data.student_name || '—';
+
+    document.getElementById('del_enrollment_no').textContent =
+        data.enrollment_no || '—';
+
+    document.getElementById('del_date_of_birth').textContent =
+        data.date_of_birth || '—';
+
+    document.getElementById('del_mobile_number').textContent =
+        data.mobile_number || '—';
+
+    document.getElementById('del_email').textContent =
+        data.email || '—';
+
+    document.getElementById('del_address').textContent =
+        data.address || '—';
+
+    document.getElementById('del_enrollment_date').textContent =
+        data.enrollment_date || '—';
+
+    if (data.course) {
+        document.getElementById('del_course_name').textContent =
+            data.course.course_name || '—';
+
+        document.getElementById('del_course_duration').textContent =
+            data.course.course_duration || '—';
+
+        document.getElementById('del_fees_structure').textContent =
+            data.course.fees_structure || '—';
+
+        document.getElementById('del_fees_paid').innerHTML =
+            data.course.fees_paid
+                ? '<span class="paid-badge">Paid</span>'
+                : '<span class="unpaid-badge">Unpaid</span>';
+    }
+
+    document.getElementById('confirmDeleteBtn').onclick = function () {
+        deleteStudent(
+            data.mobile_number,
+            data.student_name
+        );
+    };
+
+    /* Hide Step-1 message because Step-2 banner already exists */
+    hideMsg('deleteMessageBox');
+}
+
+// ============================================================
+// CANCEL DELETE
+// ============================================================
+
+function cancelDelete() {
+    document.getElementById('studentPreview').style.display = 'none';
+    document.getElementById('foundBanner').style.display = 'none';
+
+    document.getElementById('delete_mobile_number').value = '';
+
+    hideMsg('deleteMessageBox');
+}
+</script>
+<script>
+function goDashboard(){
+    window.location.replace("/dashboard");
+}
+</script>
+</body>
+</html>

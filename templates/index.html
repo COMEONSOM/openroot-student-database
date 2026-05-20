@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Database System Openroot Systems</title>
+
+    <link rel="icon" type="image/x-icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='global.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='index.css') }}">
+</head>
+
+<body>
+
+<!-- Main -->
+<div class="container">
+
+    <!-- Primary Action -->
+    <div class="section-label">Add Records</div>
+
+    <a href="/add-student" class="card-primary"  onclick="navigate('/add-student'); return false;">
+        <div class="card-primary-icon">➕</div>
+
+        <div class="card-primary-body">
+            <h2>Add New Student &amp; Course</h2>
+
+            <p>
+                Register a new student and assign their course
+                in a single form. Enrollment ID and Course ID
+                are generated automatically.
+            </p>
+
+            <div class="card-badges">
+                <span class="badge badge-blue">Personal Info</span>
+                <span class="badge badge-blue">Contact Details</span>
+                <span class="badge badge-blue">Enrollment</span>
+                <span class="badge badge-green">Course Details</span>
+                <span class="badge badge-amber">Fees Status</span>
+            </div>
+        </div>
+
+        <svg class="card-arrow"
+             width="20"
+             height="20"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor"
+             stroke-width="2.5">
+
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 5l7 7-7 7"/>
+        </svg>
+    </a>
+
+    <!-- Manage Records -->
+    <div class="section-label" style="margin-top:36px;">
+        Manage Records
+    </div>
+
+    <div class="card-grid">
+
+        <a href="/database" class="card"  onclick="navigate('/database'); return false;">
+            <div class="card-icon icon-purple">📋</div>
+
+            <div class="card-body">
+                <h2>View Database</h2>
+
+                <p>
+                    Browse all student and course records with
+                    a combined joined view.
+                </p>
+
+                <div class="card-tag">
+                    Students · Courses · JOIN view
+                </div>
+            </div>
+        </a>
+
+        <a href="/update-student" class="card"  onclick="navigate('/update-student'); return false;">
+            <div class="card-icon icon-teal">✏️</div>
+
+            <div class="card-body">
+                <h2>Search &amp; Update</h2>
+
+                <p>
+                    Search by mobile number and edit student
+                    or course information.
+                </p>
+
+                <div class="card-tag">
+                    Search by Mobile Number
+                </div>
+            </div>
+        </a>
+
+        <a href="/delete-student" class="card" onclick="navigate('/delete-student'); return false;">
+            <div class="card-icon icon-red">🗑️</div>
+
+            <div class="card-body">
+                <h2>Delete Student</h2>
+
+                <p>
+                    Search by mobile number and permanently
+                    remove a student and linked courses.
+                </p>
+
+                <div class="card-tag">
+                    CASCADE DELETE · Student + Courses
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+function navigate(url){
+    window.location.replace(url);
+}
+
+</script>
+
+</body>
+</html>

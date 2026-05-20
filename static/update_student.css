@@ -1,0 +1,46 @@
+/* ============================================================
+   UPDATE_STUDENT.CSS — Isolated styles for Search & Update page
+   All shared styles live in global.css
+   ============================================================ */
+
+/* Step 2 edit panel hidden */
+#updateContainer {
+  display: none;
+}
+
+/* Search result message (Update page only) */
+#searchMessageBox{
+  padding:0 !important;
+  border:none !important;
+  background:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+
+  display:flex;
+  align-items:center;   /* vertical centering */
+  min-height:32px;      /* keeps consistent height */
+
+  line-height:1.5;
+}
+
+/* Success */
+#searchMessageBox.success{
+  color:var(--green-600);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}
+
+/* Error */
+#searchMessageBox.error{
+  color:var(--red-500);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}
+
+/* Loading / info */
+#searchMessageBox.info,
+#searchMessageBox.loading{
+  color:var(--blue-600);
+  font-size:clamp(14px,1vw,16px);
+  font-weight:600;
+}
