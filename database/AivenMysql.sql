@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS student_management_system;
-
-USE student_management_system;
-
 -- =========================
 -- STUDENTS TABLE
 -- =========================
@@ -43,3 +39,4 @@ CREATE TABLE IF NOT EXISTS courses (
     ON UPDATE CASCADE
 );
 
+SHOW TABLES;

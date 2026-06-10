@@ -28,9 +28,11 @@ def get_db():
         if db is None or not db.is_connected():
             db = mysql.connector.connect(
                 host=MYSQL_CONFIG["host"],
+                port=MYSQL_CONFIG["port"],
                 user=MYSQL_CONFIG["user"],
                 password=MYSQL_CONFIG["password"],
                 database=MYSQL_CONFIG["database"],
+                ssl_ca=MYSQL_CONFIG["ssl_ca"],
                 autocommit=False
             )
             print("MySQL connected / reconnected.")

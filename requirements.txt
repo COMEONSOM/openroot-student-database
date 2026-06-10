@@ -4,3 +4,4 @@ mysql-connector-python
 Flask-Limiter
 Flask-WTF
 python-dotenv
+gunicorn
