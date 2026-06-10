@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Delete Student</title>
+    <title>Delete Student | Student Database System</title>
     <link rel="icon" type="image/x-icon" href="./static/favicon.ico">
     <link rel="stylesheet" href="./static/global.css">
     <link rel="stylesheet" href="./static/delete_student.css" />
@@ -14,7 +14,7 @@
 
 <div class="container">
 
-    <a href="./index.html" class="back-btn">
+    <a href="./dashboard.html" class="back-btn">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -294,10 +294,24 @@ function populatePreview(data) {
 // ============================================================
 
 function cancelDelete() {
+
     document.getElementById('studentPreview').style.display = 'none';
+
     document.getElementById('foundBanner').style.display = 'none';
 
     document.getElementById('delete_mobile_number').value = '';
+
+    document.getElementById('del_student_name').textContent = '—';
+    document.getElementById('del_enrollment_no').textContent = '—';
+    document.getElementById('del_date_of_birth').textContent = '—';
+    document.getElementById('del_mobile_number').textContent = '—';
+    document.getElementById('del_email').textContent = '—';
+    document.getElementById('del_address').textContent = '—';
+    document.getElementById('del_enrollment_date').textContent = '—';
+    document.getElementById('del_course_name').textContent = '—';
+    document.getElementById('del_course_duration').textContent = '—';
+    document.getElementById('del_fees_structure').textContent = '—';
+    document.getElementById('del_fees_paid').textContent = '—';
 
     hideMsg('deleteMessageBox');
 }

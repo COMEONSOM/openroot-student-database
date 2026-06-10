@@ -80,12 +80,32 @@ def home():
 
 @app.route("/health")
 def health():
-    return jsonify({
-        "success": True,
-        "status": "ok",
-        "database": "configured"
-    })
+    try:
+        conn, cur = get_db()
 
+        cur.execute("SELECT 1")
+        cur.fetchone()
+
+        return jsonify({
+            "success": True,
+            "status": "healthy",
+            "database": "connected"
+        })
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "status": "unhealthy",
+            "database": str(e)
+        }), 500
+
+@app.route("/api")
+def api_info():
+    return jsonify({
+        "name": "Openroot Student Management System API",
+        "version": "1.0.0",
+        "status": "running"
+    })
 # =============================================================
 # VALIDATION HELPERS
 # =============================================================
@@ -923,4 +943,10 @@ def delete_student_by_mobile(mobile):
 # =============================================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv("PORT", 5000))
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=True
+    )
