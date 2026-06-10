@@ -1,9 +1,24 @@
-python app.py
-pip install -r requirements.txt
+# 🎓 Openroot Student Database System
 
-# 🎓 Student Database System
+A modern **Student Database Management System** built with **HTML, CSS, JavaScript, Flask, and MySQL**.
 
-A modern Student Database Management System built with **Flask**, **MySQL**, **HTML**, **CSS**, and **JavaScript** for managing student and course records through a responsive user interface.
+The project now follows a **separated deployment workflow**:
+
+- **Frontend** → GitHub Pages
+- **Backend API** → Render
+- **Database** → Aiven MySQL
+
+---
+
+## 🚀 Live Architecture
+
+```text
+GitHub Pages (Frontend)
+        ↓
+Render (Flask API)
+        ↓
+Aiven MySQL (Database)
+```
 
 ---
 
@@ -11,37 +26,37 @@ A modern Student Database Management System built with **Flask**, **MySQL**, **H
 
 ### Student Management
 - Add new students
-- Auto-generated enrollment number
-- Store student personal details
-- Store contact information
-- Date of birth validation
-- Enrollment date tracking
+- Auto-generate enrollment numbers
+- Store personal details
+- Store contact details
+- Validate date of birth
+- Track enrollment dates
 
 ### Course Management
-- Assign courses to students
-- Fee structure management
-- Payment status tracking
-- Course duration tracking
-- Course start and end date management
+- Assign course details to a student
+- Manage fee structure
+- Track payment status
+- Store course duration
+- Track course start and end dates
 
 ### Record Operations
 - Search student by mobile number
 - Update student details
 - Delete student records
 - Cascade delete support
-- View complete database records
+- View joined student + course records
 
 ### User Interface
-- Responsive layout
+- Responsive frontend pages
 - Landing page
 - Dashboard cards
-- Success and error notifications
-- Form validation
-- Modern UI design
+- Modern form layouts
+- Search and update workflow
+- Success/error message boxes
 
 ---
 
-## 🛠 Technologies Used
+## 🛠 Tech Stack
 
 ### Frontend
 - HTML5
@@ -50,14 +65,16 @@ A modern Student Database Management System built with **Flask**, **MySQL**, **H
 
 ### Backend
 - Flask (Python)
+- Flask-CORS
+- MySQL Connector
 
 ### Database
-- MySQL
+- MySQL 8.4 on Aiven
 
-### Tools
-- MySQL Workbench
-- Git
-- GitHub
+### Deployment
+- GitHub Pages for frontend
+- Render for backend API
+- Aiven for database hosting
 
 ---
 
@@ -66,120 +83,98 @@ A modern Student Database Management System built with **Flask**, **MySQL**, **H
 ```text
 Student-Database-System/
 │
-├── app.py
-├── config.py
-├── requirements.txt
-├── database_setup.sql
-├── sample_data.sql
-├── .env
-├── .gitignore
-│
-├── templates/
+├── frontend/
 │   ├── landingpage.html
 │   ├── index.html
 │   ├── add_student.html
 │   ├── update_student.html
 │   ├── delete_student.html
-│   └── database.html
+│   ├── database.html
+│   └── static/
+│       ├── global.css
+│       ├── index.css
+│       ├── add_student.css
+│       ├── update_student.css
+│       ├── delete_student.css
+│       ├── script.js
+│       ├── indiaGeoData.json
+│       ├── logo.png
+│       └── favicon.ico
 │
-├── static/
-│   ├── global.css
-│   ├── index.css
-│   ├── add_student.css
-│   ├── update_student.css
-│   ├── delete_student.css
-│   ├── script.js
-│   ├── logo.png
-│   └── favicon.ico
+├── backend/
+│   ├── app.py
+│   ├── config.py
+│   ├── requirements.txt
+│   └── certs/
+│       └── ca.pem
+│
+├── database/
+│   ├── database_setup.sql
+│   └── sample_data.sql
+│
+├── .env
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-## ⚙️ Installation and Setup
+## 🔗 API Endpoints
 
-### Step 1: Clone the repository
+The Flask backend now works as an **API-only service**.
+
+### Public / Utility
+- `GET /` → health/status response
+
+### Student APIs
+- `GET /api/students`
+- `GET /api/courses`
+- `GET /api/full-database`
+- `GET /api/student/<mobile>`
+- `POST /api/add-student`
+- `POST /api/add-course`
+- `PUT /api/student/<mobile>`
+- `DELETE /api/student/<mobile>`
+
+---
+
+## ⚙️ Local Development Setup
+
+### 1) Clone the repository
 
 ```bash
 git clone https://github.com/yourusername/student-database-system.git
-```
-
-Move into project directory:
-
-```bash
 cd student-database-system
 ```
 
----
-
-### Step 2: Install required dependencies
+### 2) Install backend dependencies
 
 ```bash
+cd backend
 pip install -r requirements.txt
 ```
 
----
+### 3) Configure environment variables
 
-### Step 3: Install MySQL
-
-Install:
-
-- MySQL Server
-- MySQL Workbench
-
----
-
-### Step 4: Configure Database
-
-Open MySQL Workbench.
-
-Open:
-
-```text
-database_setup.sql
-```
-
-Click:
-
-```text
-⚡ Execute All
-```
-
-This creates:
-
-- Database
-- Students table
-- Courses table
-
----
-
-### Step 5: Configure Environment Variables
-
-Create a file:
-
-```text
-.env
-```
-
-Add:
+Create a `.env` file inside `backend/`:
 
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=student_database
+DB_HOST=YOUR_AIVEN_HOST
+DB_PORT=19699
+DB_USER=avnadmin
+DB_PASSWORD=YOUR_AIVEN_PASSWORD
+DB_NAME=student_management_system
+DB_SSL_CA=certs/ca.pem
+FLASK_ENV=production
 ```
 
----
-
-### Step 6: Run Flask Application
-
-Activate virtual environment      .\.venv\Scripts\Activate
+### 4) Run the backend locally
 
 ```bash
 python app.py
 ```
 
-Open browser:
+Backend runs at:
 
 ```text
 http://127.0.0.1:5000
@@ -187,71 +182,151 @@ http://127.0.0.1:5000
 
 ---
 
-## 🗄 Database Schema
+## 🗄 Database Setup
 
-### Students Table
+The database is hosted on **Aiven MySQL 8.4**.
 
-| Field | Type |
-|---------|------|
-| enrollment_no | VARCHAR |
-| student_name | VARCHAR |
-| date_of_birth | DATE |
-| mobile_number | VARCHAR |
-| email | VARCHAR |
-| address | TEXT |
-| enrollment_date | DATE |
+### Required tables
+- `students`
+- `courses`
+
+### Important notes
+- `students.enrollment_no` is the primary key
+- `courses.enrollment_no` uses a foreign key
+- Deleting a student cascades to linked course records
 
 ---
 
-### Courses Table
+## 🌐 Frontend Deployment (GitHub Pages)
 
-| Field | Type |
-|---------|------|
-| course_id | INT |
-| enrollment_no | VARCHAR |
-| course_name | VARCHAR |
-| fees_structure | DECIMAL |
-| fees_paid | BOOLEAN |
-| course_duration | VARCHAR |
-| course_start_date | DATE |
-| course_end_date | DATE |
+The frontend is completely static and can be deployed on **GitHub Pages**.
+
+### Frontend files
+- `landingpage.html`
+- `index.html`
+- `add_student.html`
+- `update_student.html`
+- `delete_student.html`
+- `database.html`
+- `static/script.js`
+- CSS files
+- `indiaGeoData.json`
+
+### Frontend API base URL
+Update the JavaScript API base URL to the Render backend URL:
+
+```js
+const API_BASE = "https://openroot-student-management-system-api.onrender.com";
+```
+
+---
+
+## ☁️ Backend Deployment (Render)
+
+The backend is deployed on **Render** as a Flask web service.
+
+### Build command
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+### Start command
+
+```bash
+gunicorn app:app
+```
+
+### Environment variables on Render
+Set the same values used in local development:
+
+```env
+DB_HOST=YOUR_AIVEN_HOST
+DB_PORT=19699
+DB_USER=avnadmin
+DB_PASSWORD=YOUR_AIVEN_PASSWORD
+DB_NAME=student_management_system
+DB_SSL_CA=certs/ca.pem
+FLASK_ENV=production
+```
+
+---
+
+## 🧩 Aiven MySQL Connection
+
+Aiven provides the database connection details used by the backend.
+
+### Example fields
+- Host
+- Port
+- Username
+- Password
+- Database name
+- SSL certificate (`ca.pem`)
+
+### Workbench support
+You can connect using **MySQL Workbench** with:
+- SSL enabled
+- CA certificate selected
+- Correct host, port, username, and password
 
 ---
 
 ## 🔒 Security Notes
 
-Never upload:
+Never commit these files or values:
 
 - `.env`
 - Database passwords
-- API keys
-- Secret credentials
+- Secret keys
+- Private API keys
+- Personal credentials
 
 Recommended `.gitignore`:
 
 ```gitignore
 .env
+.venv/
 __pycache__/
 *.pyc
 ```
 
 ---
 
-## 🚀 Future Enhancements
+## ✅ What Changed in the New Workflow
 
-- Authentication system
-- Admin dashboard
+Earlier the project used Flask to serve HTML pages directly.
+
+Now the project is separated into:
+
+### Frontend
+Static pages hosted on GitHub Pages
+
+### Backend
+Flask API hosted on Render
+
+### Database
+Aiven MySQL database accessed through secure environment variables
+
+This makes the project easier to maintain and easier to deploy.
+
+---
+
+## 🚧 Future Enhancements
+
+- Admin authentication layer
+- Search filters and pagination
+- Export to PDF/CSV
+- Better activity logging
 - Student image upload
-- Attendance management
-- Export to PDF
-- Search filters
-- Pagination support
+- Attendance module
+- Role-based access control
 
 ---
 
 ## 👨‍💻 Author
 
-Somnath Banerjee
+**Somnath Banerjee**
 
 ---
 

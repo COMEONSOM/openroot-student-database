@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+import os
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error, IntegrityError
@@ -8,7 +9,21 @@ from datetime import date
 import re
 
 app = Flask(__name__)
-CORS(app)
+
+def _load_cors_origins():
+    raw = os.getenv("CORS_ALLOWED_ORIGINS", "*").strip()
+    if raw == "*":
+        return "*"
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+CORS(
+    app,
+    resources={
+        r"/api/*": {
+            "origins": _load_cors_origins()
+        }
+    }
+)
 
 # =============================================================
 # DATABASE  —  persistent connection with auto-reconnect
@@ -50,6 +65,26 @@ try:
     print("MySQL Connected Successfully")
 except Error as e:
     print("Startup DB error:", e)
+
+# =============================================================
+# APP / HEALTH ROUTES
+# =============================================================
+
+@app.route("/")
+def home():
+    return jsonify({
+        "success": True,
+        "message": "Openroot Student Management System API",
+        "status": "running"
+    })
+
+@app.route("/health")
+def health():
+    return jsonify({
+        "success": True,
+        "status": "ok",
+        "database": "configured"
+    })
 
 # =============================================================
 # VALIDATION HELPERS
@@ -272,44 +307,6 @@ def generate_enrollment_no():
 
 def validate_fee_payload(value):
     return parse_money(value)
-
-# =============================================================
-# PAGE ROUTES
-# =============================================================
-
-@app.route("/")
-def landing():
-    return render_template("landingpage.html")
-
-
-@app.route("/dashboard")
-def dashboard():
-    return render_template("index.html")
-
-
-@app.route("/add-student")
-def add_student_page():
-    return render_template("add_student.html")
-
-
-@app.route("/add-course")
-def add_course_page():
-    return render_template("add_course.html")
-
-
-@app.route("/database")
-def database_page():
-    return render_template("database.html")
-
-
-@app.route("/update-student")
-def update_student_page():
-    return render_template("update_student.html")
-
-
-@app.route("/delete-student")
-def delete_student_page():
-    return render_template("delete_student.html")
 
 # =============================================================
 # API  —  FULL DATABASE

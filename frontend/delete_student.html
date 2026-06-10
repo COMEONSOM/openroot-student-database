@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Delete Student</title>
-     <link rel="icon" type="image/x-icon"
-          href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='delete_student.css') }}" />
+    <link rel="icon" type="image/x-icon" href="./static/favicon.ico">
+    <link rel="stylesheet" href="./static/global.css">
+    <link rel="stylesheet" href="./static/delete_student.css" />
 </head>
 
 <body>
 
 <div class="container">
 
-    <a href="#" class="back-btn"  onclick="goDashboard(); return false;">
+    <a href="./index.html" class="back-btn">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -172,7 +171,7 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="./static/script.js"></script>
 
 <script>
 document
@@ -287,7 +286,6 @@ function populatePreview(data) {
         );
     };
 
-    /* Hide Step-1 message because Step-2 banner already exists */
     hideMsg('deleteMessageBox');
 }
 
@@ -302,11 +300,6 @@ function cancelDelete() {
     document.getElementById('delete_mobile_number').value = '';
 
     hideMsg('deleteMessageBox');
-}
-</script>
-<script>
-function goDashboard(){
-    window.location.replace("/dashboard");
 }
 </script>
 </body>

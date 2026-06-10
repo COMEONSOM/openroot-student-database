@@ -6,11 +6,9 @@
 
 <title>Student Database System</title>
 
-<link rel="icon" type="image/x-icon"
-      href="{{ url_for('static', filename='favicon.ico') }}">
+<link rel="icon" type="image/x-icon" href="./static/favicon.ico">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -79,98 +77,67 @@ h1{
 /* Proceed button */
 
 .proceed-btn{
-
     border:none;
     outline:none;
-
     padding:18px 40px;
-
     border-radius:18px;
-
     font-size:18px;
     font-weight:700;
-
     cursor:pointer;
-
     color:white;
-
     background:linear-gradient(
-    135deg,
-    #2563eb,
-    #4f46e5
+        135deg,
+        #2563eb,
+        #4f46e5
     );
-
     transition:.4s;
 }
 
 .proceed-btn:hover{
-
-    transform:
-    translateX(2px);
-
+    transform:translateX(2px);
 }
 
 .proceed-btn:active{
-
-    transform:
-    scale(.97);
-
+    transform:scale(.97);
 }
 
 /* Animation */
 
 @keyframes fadeIn{
-
     from{
         opacity:0;
-        transform:
-        translateY(50px);
+        transform:translateY(50px);
     }
 
     to{
         opacity:1;
-        transform:
-        translateY(0px);
+        transform:translateY(0px);
     }
-
 }
 
 @keyframes floatLogo{
-
     0%,100%{
-
-        transform:
-        translateY(0);
-
+        transform:translateY(0);
     }
 
     50%{
-
-        transform:
-        translateY(-10px);
-
+        transform:translateY(-10px);
     }
-
 }
 
 /* Mobile */
 
 @media(max-width:768px){
-
     .logo{
-
         width:90px;
         height:90px;
     }
 
     .proceed-btn{
-
         width:100%;
         max-width:300px;
     }
-
 }
-
 </style>
 </head>
 
@@ -179,8 +146,7 @@ h1{
 <div class="landing">
 
     <div class="logo">
-        <img src="{{ url_for('static', filename='logo.png') }}"
-             alt="Company Logo">
+        <img src="./static/logo.png" alt="Company Logo">
     </div>
 
     <h1>
@@ -191,23 +157,16 @@ h1{
         Student enrollments, courses, and records
     </div>
 
-    <button
-        class="proceed-btn"
-        onclick="goNext()">
-
+    <button class="proceed-btn" onclick="goNext()">
         Proceed →
     </button>
 
 </div>
 
 <script>
-
 function goNext(){
-
-    window.location.href="/dashboard";
-
+    window.location.href = "./index.html";
 }
-
 </script>
 
 </body>

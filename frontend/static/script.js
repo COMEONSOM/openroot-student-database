@@ -7,13 +7,22 @@
 // - Database Viewer
 // ============================================================
 
+const API_BASE =
+    "https://openroot-student-management-system-api.onrender.com";
+
 const API = {
-    addStudent: "/api/add-student",
-    addCourse: "/api/add-course",
-    fullDatabase: "/api/full-database",
-    searchStudentByMobile: (m) => `/api/student/${encodeURIComponent(m)}`,
-    updateStudentByMobile: (m) => `/api/student/${encodeURIComponent(m)}`,
-    deleteStudentByMobile: (m) => `/api/student/${encodeURIComponent(m)}`
+    addStudent: `${API_BASE}/api/add-student`,
+    addCourse: `${API_BASE}/api/add-course`,
+    fullDatabase: `${API_BASE}/api/full-database`,
+
+    searchStudentByMobile: (m) =>
+        `${API_BASE}/api/student/${encodeURIComponent(m)}`,
+
+    updateStudentByMobile: (m) =>
+        `${API_BASE}/api/student/${encodeURIComponent(m)}`,
+
+    deleteStudentByMobile: (m) =>
+        `${API_BASE}/api/student/${encodeURIComponent(m)}`
 };
 
 // ============================================================
@@ -38,7 +47,7 @@ let DATABASE_FILTERED_RECORDS = [];
 
 async function loadIndiaGeoData() {
     try {
-        const response = await fetch("/static/indiaGeoData.json");
+        const response = await fetch("./static/indiaGeoData.json");
 
         if (!response.ok) {
             throw new Error("Failed to load indiaGeoData.json");
@@ -53,7 +62,7 @@ async function loadIndiaGeoData() {
 
 async function loadUpdateGeoData() {
     try {
-        const response = await fetch("/static/indiaGeoData.json");
+        const response = await fetch("./static/indiaGeoData.json");
 
         if (!response.ok) {
             throw new Error("Failed to load indiaGeoData.json");
