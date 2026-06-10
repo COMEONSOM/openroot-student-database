@@ -27,6 +27,7 @@ CORS(
 
 # =============================================================
 # DATABASE  —  persistent connection with auto-reconnect
+# aiven database at sb8787878
 # =============================================================
 
 db = None

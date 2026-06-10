@@ -1,58 +1,77 @@
 # 🎓 Openroot Student Database System
 
-A modern **Student Database Management System** built with **HTML, CSS, JavaScript, Flask, and MySQL**.
-
-The project now follows a **separated deployment workflow**:
+A modern **Student Database Management System** built with **HTML, CSS, JavaScript, Flask, and MySQL**.  
+The project now uses a **clean separated deployment workflow**:
 
 - **Frontend** → GitHub Pages
 - **Backend API** → Render
-- **Database** → Aiven MySQL
+- **Database** → Aiven MySQL 8.4
 
 ---
 
-## 🚀 Live Architecture
+## 🌐 Live Links
+
+| Part | URL |
+|---|---|
+| Frontend | https://comeonsom.github.io/openroot-student-database/ |
+| Backend API | https://openroot-student-management-system-api.onrender.com |
+| Health Check | https://openroot-student-management-system-api.onrender.com/health |
+
+> If any service name changes later, update the matching URL here and in the JavaScript API base constant.
+
+---
+
+## 🚀 Architecture Overview
 
 ```text
-GitHub Pages (Frontend)
+GitHub Pages (Static Frontend)
         ↓
-Render (Flask API)
+Render (Flask API-only backend)
         ↓
-Aiven MySQL (Database)
+Aiven MySQL 8.4 (Managed database)
 ```
+
+This means:
+
+- the **browser** loads the HTML/CSS/JS pages from GitHub Pages,
+- the **JavaScript** talks to the Flask backend on Render using `fetch()`,
+- the **Flask backend** reads and writes data in Aiven MySQL,
+- the frontend never connects to the database directly.
 
 ---
 
-## ✨ Features
+## ✨ What This Project Does
 
 ### Student Management
-- Add new students
+- Add a new student
 - Auto-generate enrollment numbers
-- Store personal details
-- Store contact details
+- Save personal details
+- Save contact details
 - Validate date of birth
-- Track enrollment dates
+- Track enrollment date
 
 ### Course Management
-- Assign course details to a student
-- Manage fee structure
+- Assign a course to a student
+- Store fee details
 - Track payment status
 - Store course duration
-- Track course start and end dates
+- Store course start and end dates
 
 ### Record Operations
 - Search student by mobile number
-- Update student details
-- Delete student records
-- Cascade delete support
+- Update student and course details
+- Delete a student and linked course rows
 - View joined student + course records
+- Cascade delete support in the database
 
-### User Interface
-- Responsive frontend pages
+### User Experience
 - Landing page
 - Dashboard cards
 - Modern form layouts
-- Search and update workflow
-- Success/error message boxes
+- Search → edit workflow
+- Delete preview screen
+- Message boxes for success/error/loading states
+- Responsive design for mobile and desktop
 
 ---
 
@@ -62,30 +81,36 @@ Aiven MySQL (Database)
 - HTML5
 - CSS3
 - JavaScript
+- GitHub Pages
 
 ### Backend
-- Flask (Python)
+- Flask
 - Flask-CORS
-- MySQL Connector
+- MySQL Connector Python
+- Gunicorn
+- Render
 
 ### Database
 - MySQL 8.4 on Aiven
+- SSL/TLS enabled with Aiven CA certificate
 
-### Deployment
-- GitHub Pages for frontend
-- Render for backend API
-- Aiven for database hosting
+### Tools
+- MySQL Workbench
+- Git
+- GitHub
 
 ---
 
 ## 📁 Project Structure
 
+The repository is organized around deployment, not around a single monolithic Flask app.
+
 ```text
 Student-Database-System/
 │
-├── frontend/
-│   ├── landingpage.html
-│   ├── index.html
+├── docs/                          # GitHub Pages source folder
+│   ├── index.html                 # Landing page
+│   ├── dashboard.html             # Dashboard page
 │   ├── add_student.html
 │   ├── update_student.html
 │   ├── delete_student.html
@@ -96,6 +121,7 @@ Student-Database-System/
 │       ├── add_student.css
 │       ├── update_student.css
 │       ├── delete_student.css
+│       ├── database.css
 │       ├── script.js
 │       ├── indiaGeoData.json
 │       ├── logo.png
@@ -110,23 +136,98 @@ Student-Database-System/
 │
 ├── database/
 │   ├── database_setup.sql
-│   └── sample_data.sql
+│   ├── AivenMysql.sql
+│   └── queries.sql
 │
 ├── .env
+├── .env.example
 ├── .gitignore
 └── README.md
 ```
+
+### What each folder does
+
+#### `docs/`
+This is the **published frontend** folder for GitHub Pages.  
+It contains all static HTML pages and assets.
+
+#### `backend/`
+This is the **Flask API service**.  
+It contains only backend code and database connection logic.
+
+#### `database/`
+This folder contains SQL files used to create and seed the database schema.
+
+---
+
+## Page Flow
+
+The frontend uses a simple navigation flow:
+
+```text
+index.html (Landing Page)
+    ↓
+dashboard.html
+    ├── add_student.html
+    ├── update_student.html
+    ├── delete_student.html
+    └── database.html
+```
+
+### Why this structure works well
+- The landing page stays simple and welcoming.
+- The dashboard acts as the main control center.
+- Each action gets its own page, so the UI remains clean and easy to maintain.
+
+---
+
+## 🔁 How the Full Workflow Works
+
+### 1) User opens the landing page
+GitHub Pages serves `index.html`.
+
+### 2) User clicks **Proceed**
+The browser opens `dashboard.html`.
+
+### 3) User performs an action
+For example, adding a student on `add_student.html`.
+
+### 4) JavaScript sends a request to Render
+The form uses `fetch()` to call the Flask API, for example:
+
+```js
+const API_BASE = "https://openroot-student-management-system-api.onrender.com";
+```
+
+### 5) Flask validates the data
+The backend checks:
+- names
+- mobile numbers
+- email format
+- date of birth
+- fee format
+- pincode format
+- course date order
+
+### 6) Flask writes to Aiven MySQL
+The API inserts or updates rows in:
+- `students`
+- `courses`
+
+### 7) Response goes back to the browser
+The frontend shows a success or error message without reloading the entire site.
 
 ---
 
 ## 🔗 API Endpoints
 
-The Flask backend now works as an **API-only service**.
+The backend is API-only.
 
-### Public / Utility
-- `GET /` → health/status response
+### Utility
+- `GET /` → basic API status response
+- `GET /health` → health check that also verifies the database connection
 
-### Student APIs
+### Student and course APIs
 - `GET /api/students`
 - `GET /api/courses`
 - `GET /api/full-database`
@@ -139,6 +240,8 @@ The Flask backend now works as an **API-only service**.
 ---
 
 ## ⚙️ Local Development Setup
+
+If you want to work on the project again after a long time, follow this sequence.
 
 ### 1) Clone the repository
 
@@ -156,16 +259,18 @@ pip install -r requirements.txt
 
 ### 3) Configure environment variables
 
-Create a `.env` file inside `backend/`:
+Create a `.env` file in root and add:
 
 ```env
 DB_HOST=YOUR_AIVEN_HOST
-DB_PORT=19699
-DB_USER=avnadmin
+DB_PORT=AIVEN_PORT_DATA
+DB_USER=AIVEN_USERNAME
 DB_PASSWORD=YOUR_AIVEN_PASSWORD
-DB_NAME=student_management_system
+DB_NAME=USED_DB_NAME
 DB_SSL_CA=certs/ca.pem
+CORS_ALLOWED_ORIGINS=https://comeonsom.github.io
 FLASK_ENV=production
+PORT=5000
 ```
 
 ### 4) Run the backend locally
@@ -174,7 +279,7 @@ FLASK_ENV=production
 python app.py
 ```
 
-Backend runs at:
+The backend will run at:
 
 ```text
 http://127.0.0.1:5000
@@ -186,42 +291,77 @@ http://127.0.0.1:5000
 
 The database is hosted on **Aiven MySQL 8.4**.
 
-### Required tables
+### Core tables
 - `students`
 - `courses`
 
-### Important notes
+### Important relationships
 - `students.enrollment_no` is the primary key
-- `courses.enrollment_no` uses a foreign key
-- Deleting a student cascades to linked course records
+- `courses.enrollment_no` is a foreign key that references `students.enrollment_no`
+- deleting a student automatically removes related course rows because of **ON DELETE CASCADE**
+
+### Schema summary
+
+#### `students`
+Stores:
+- enrollment number
+- student name
+- date of birth
+- mobile number
+- email
+- address
+- enrollment date
+- timestamps
+
+#### `courses`
+Stores:
+- course ID
+- enrollment number
+- course name
+- fees structure
+- fees paid status
+- course duration
+- course start and end dates
+- timestamps
 
 ---
 
-## 🌐 Frontend Deployment (GitHub Pages)
+## 🌐 Frontend Deployment on GitHub Pages
 
-The frontend is completely static and can be deployed on **GitHub Pages**.
+The frontend is fully static and can be hosted on GitHub Pages.
 
-### Frontend files
-- `landingpage.html`
+### Frontend pages
 - `index.html`
+- `dashboard.html`
 - `add_student.html`
 - `update_student.html`
 - `delete_student.html`
 - `database.html`
-- `static/script.js`
-- CSS files
-- `indiaGeoData.json`
 
-### Frontend API base URL
-Update the JavaScript API base URL to the Render backend URL:
+### Frontend assets
+- CSS files
+- `script.js`
+- `indiaGeoData.json`
+- images and favicon
+
+### Important frontend constant
+Your JavaScript must point to the Render backend:
 
 ```js
 const API_BASE = "https://openroot-student-management-system-api.onrender.com";
 ```
 
+### GitHub Pages setup
+The repository is configured to publish from:
+
+```text
+Branch: main
+Folder: /docs
+```
+
 ---
 
-## ☁️ Backend Deployment (Render)
+## ☁️ Backend Deployment on Render
 
 The backend is deployed on **Render** as a Flask web service.
 
@@ -238,37 +378,45 @@ gunicorn app:app
 ```
 
 ### Environment variables on Render
-Set the same values used in local development:
+
+Add the same values used locally:
 
 ```env
 DB_HOST=YOUR_AIVEN_HOST
-DB_PORT=19699
-DB_USER=avnadmin
+DB_PORT=AIVEN_PORT_DATA
+DB_USER=AIVEN_USERNAME
 DB_PASSWORD=YOUR_AIVEN_PASSWORD
-DB_NAME=student_management_system
+DB_NAME=USED_DB_NAME
 DB_SSL_CA=certs/ca.pem
+CORS_ALLOWED_ORIGINS=https://comeonsom.github.io
 FLASK_ENV=production
+PORT=5000
 ```
+
+> The exact Render service URL and the GitHub Pages URL should also be kept in sync with the frontend JavaScript and this README.
 
 ---
 
-## 🧩 Aiven MySQL Connection
+## 🔐 Aiven MySQL Connection Notes
 
-Aiven provides the database connection details used by the backend.
-
-### Example fields
+Aiven provides:
 - Host
 - Port
 - Username
 - Password
 - Database name
-- SSL certificate (`ca.pem`)
+- CA certificate (`ca.pem`)
 
-### Workbench support
-You can connect using **MySQL Workbench** with:
-- SSL enabled
-- CA certificate selected
-- Correct host, port, username, and password
+### MySQL Workbench setup
+To connect from MySQL Workbench:
+- choose **SSL required**
+- select the downloaded **CA certificate**
+- enter the Aiven host, port, username, and password
+- use the same database name as the backend
+
+### Why the CA certificate matters
+Aiven requires SSL/TLS so the connection is encrypted.  
+The CA certificate lets the client verify that the connection is really going to the Aiven server.
 
 ---
 
@@ -277,10 +425,10 @@ You can connect using **MySQL Workbench** with:
 Never commit these files or values:
 
 - `.env`
-- Database passwords
-- Secret keys
-- Private API keys
-- Personal credentials
+- database passwords
+- secret keys
+- private API keys
+- personal credentials
 
 Recommended `.gitignore`:
 
@@ -291,36 +439,86 @@ __pycache__/
 *.pyc
 ```
 
+### What is safe to commit?
+- HTML/CSS/JS
+- SQL schema files
+- public CA certificate (`ca.pem`)
+- static assets
+- README documentation
+
+### What should stay private?
+- passwords
+- secret keys
+- any environment-specific sensitive values
+
 ---
 
-## ✅ What Changed in the New Workflow
-
-Earlier the project used Flask to serve HTML pages directly.
-
-Now the project is separated into:
+## 🧩 Why This New Workflow Is Better
 
 ### Frontend
-Static pages hosted on GitHub Pages
+Static pages on GitHub Pages
 
 ### Backend
-Flask API hosted on Render
+Flask API on Render
 
 ### Database
-Aiven MySQL database accessed through secure environment variables
+Managed MySQL on Aiven
 
-This makes the project easier to maintain and easier to deploy.
+### Benefits
+- easier to maintain
+- easier to debug
+- cleaner deployment
+- safer database access
+- frontend can be updated without touching backend logic
+- backend can be scaled or redeployed independently
 
 ---
 
-## 🚧 Future Enhancements
+## 🧰 How to Reopen the Project Later
 
-- Admin authentication layer
-- Search filters and pagination
-- Export to PDF/CSV
-- Better activity logging
-- Student image upload
-- Attendance module
-- Role-based access control
+When you come back to this project after a long time, use this checklist:
+
+### 1) Open the repository
+Confirm the repo still contains:
+- `docs/`
+- `backend/`
+- `database/`
+
+### 2) Check the live services
+- Frontend GitHub Pages URL
+- Render backend URL
+- Aiven database status
+
+### 3) Verify the environment variables
+Check that backend variables still point to:
+- Aiven host
+- Aiven port
+- correct username/password
+- correct DB name
+- correct CA certificate path
+
+### 4) Open the frontend
+Test:
+- landing page
+- dashboard
+- add student
+- update student
+- delete student
+- database viewer
+
+### 5) Verify the API
+Open:
+- `/health`
+- `/api/students`
+- `/api/full-database`
+
+### 6) Test one full flow
+Add one record and confirm it appears in:
+- the frontend database viewer
+- MySQL Workbench
+- Aiven database
+
+That quick test tells you whether the whole stack is healthy.
 
 ---
 
@@ -332,4 +530,4 @@ This makes the project easier to maintain and easier to deploy.
 
 ## 📄 License
 
-This project is intended for educational and learning purposes.
+Belongs to Openroot Systems (Kolkata, West Bengal, India).
