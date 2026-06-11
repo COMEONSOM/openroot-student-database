@@ -15,7 +15,7 @@
   <p>
     <img src="https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages">
     <img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=black" alt="Render">
-    <img src="https://img.shields.io/badge/Aiven-FF3E00?style=for-the-badge&logo=aiven&logoColor=white" alt="Aiven">
+    <img src="https://img.shields.io/badge/TiDB Cloud-FF3E00?style=for-the-badge&logo=aiven&logoColor=white" alt="TiDB Cloud">
   </p>
 
 </div>
@@ -74,7 +74,7 @@
 +--------------------------------------------------+
                         ↓
 +--------------------------------------------------+
-|        Aiven MySQL 8.4 (Managed Database)        |  <- SSL/TLS encrypted connection
+|        TiDB Cloud Serverless (Managed Database)  |  <- SSL/TLS encrypted connection
 |                                                  |
 |  +------------------+  +---------------------+   |
 |  |     students     |  |       courses       |   |
@@ -93,7 +93,7 @@
 |-----------|------|-------------|
 | **GitHub Pages** | Frontend Host | Serves all static HTML, CSS, and JavaScript assets |
 | **Flask API** | Backend Service | Validates input, handles business logic, and writes to the database |
-| **Aiven MySQL** | Database Layer | Managed MySQL 8.4 with SSL/TLS and cascading relational integrity |
+| **TiDB Cloud** | Database Layer | Managed TiDB Serverless with SSL/TLS and cascading relational integrity |
 | **Gunicorn** | WSGI Server | Production-grade process manager for the Flask application on Render |
 | **script.js** | API Client | All `fetch()` calls to the Render backend originate here |
 
@@ -109,10 +109,10 @@
 | Frontend Hosting | GitHub Pages | Static delivery from the `/docs` folder |
 | Backend Framework | Python 3 / Flask | REST API with input validation |
 | Cross-Origin | Flask-CORS | Allows the GitHub Pages frontend to call the Render API |
-| DB Driver | MySQL Connector/Python | Encrypted connection to Aiven MySQL |
+| DB Driver | MySQL Connector/Python | Encrypted connection to TiDB Cloud |
 | Process Manager | Gunicorn | WSGI server for production Flask deployment on Render |
 | Backend Hosting | Render | PaaS hosting for the Flask web service |
-| Database | MySQL 8.4 on Aiven | Managed relational database with SSL/TLS |
+| Database | MySQL 8.4 on TiDB Cloud | Managed relational database with SSL/TLS |
 | Dev Tools | MySQL Workbench, Git, GitHub | Schema management and version control |
 
 ---
@@ -188,10 +188,10 @@ Student-Database-System/
 │   ├── config.py                  # Database and environment configuration
 │   ├── requirements.txt
 │   └── certs/
-│       └── ca.pem                 # Aiven SSL CA certificate
+│       └── ca.pem                 # TiDB Cloud SSL CA certificate
 ├── database/                      # Schema and seed files
 │   ├── database_setup.sql
-│   ├── AivenMysql.sql
+│   ├── TiDB CloudMysql.sql
 │   └── queries.sql
 ├── .env                           # Local environment variables (never commit)
 ├── .env.example
@@ -224,7 +224,7 @@ dashboard.html
 1. The user opens `index.html` served by GitHub Pages.
 2. Navigation proceeds to `dashboard.html`, which links to all functional modules.
 3. User actions trigger JavaScript `fetch()` requests to the Render backend.
-4. The backend validates input, executes business logic, and persists data to Aiven MySQL.
+4. The backend validates input, executes business logic, and persists data to TiDB Cloud.
 5. The frontend displays API responses without requiring full page reloads.
 
 ### Frontend Integration
@@ -277,7 +277,7 @@ The API enforces strict validation on all incoming requests:
 
 ## Database Schema
 
-The managed MySQL 8.4 instance on Aiven contains two core tables with referential integrity enforced via foreign keys.
+The managed MySQL 8.4 instance on TiDB Cloud contains two core tables with referential integrity enforced via foreign keys.
 
 ### `students`
 
@@ -340,10 +340,10 @@ The Flask application is deployed as a web service on Render.
 #### Required Render Environment Variables
 
 ```env
-DB_HOST=YOUR_AIVEN_HOST
-DB_PORT=AIVEN_PORT
-DB_USER=AIVEN_USERNAME
-DB_PASSWORD=YOUR_AIVEN_PASSWORD
+DB_HOST=YOUR_TIDB_HOST
+DB_PORT=4000
+DB_USER=YOUR_TIDB_USERNAME
+DB_PASSWORD=YOUR_TIDB_PASSWORD
 DB_NAME=YOUR_DB_NAME
 DB_SSL_CA=certs/ca.pem
 CORS_ALLOWED_ORIGINS=https://comeonsom.github.io
@@ -351,18 +351,18 @@ FLASK_ENV=production
 PORT=5000
 ```
 
-### Database Connection (Aiven)
+### Database Connection (TiDB Cloud)
 
-Aiven MySQL requires TLS encryption for all connections. The backend and any management clients must present the CA certificate (`ca.pem`) to verify server identity.
+TiDB Cloud requires TLS encryption for all connections. The backend and any management clients must present the CA certificate (`ca.pem`) to verify server identity.
 
 #### MySQL Workbench Configuration
 
 | Setting | Value |
 |---------|-------|
 | **SSL mode** | Require SSL |
-| **SSL CA file** | Downloaded `ca.pem` from Aiven console |
-| **Host / Port** | Aiven-provided host and port |
-| **Credentials** | Aiven username, password, and database name |
+| **SSL CA file** | Downloaded `ca.pem` from TiDB Cloud console |
+| **Host / Port** | TiDB Cloud-provided host and port |
+| **Credentials** | TiDB Cloud username, password, and database name |
 
 ---
 
@@ -373,7 +373,7 @@ Aiven MySQL requires TLS encryption for all connections. The backend and any man
 - Python 3.x
 - pip
 - Git
-- Aiven MySQL instance (or local MySQL 8.x for isolated testing)
+- TiDB Cloud instance (or local MySQL 8.x for isolated testing)
 
 ### Clone and Install
 
@@ -389,10 +389,10 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-DB_HOST=YOUR_AIVEN_HOST
-DB_PORT=AIVEN_PORT
-DB_USER=AIVEN_USERNAME
-DB_PASSWORD=YOUR_AIVEN_PASSWORD
+DB_HOST=YOUR_TIDB_HOST
+DB_PORT=4000
+DB_USER=YOUR_TIDB_USERNAME
+DB_PASSWORD=YOUR_TIDB_PASSWORD
 DB_NAME=USED_DB_NAME
 DB_SSL_CA=certs/ca.pem
 CORS_ALLOWED_ORIGINS=https://comeonsom.github.io
@@ -452,11 +452,11 @@ When returning to this project after extended downtime, follow this checklist.
 
 - [ ] Frontend GitHub Pages URL responds with HTTP 200
 - [ ] Render backend `/health` endpoint returns a healthy status
-- [ ] Aiven database shows active status in the service console
+- [ ] TiDB Cloud database shows active status in the service console
 
 ### Environment Verification
 
-- [ ] All backend environment variables point to the current Aiven host, port, credentials, and CA path
+- [ ] All backend environment variables point to the current TiDB Cloud host, port, credentials, and CA path
 - [ ] `CORS_ALLOWED_ORIGINS` matches the current GitHub Pages domain
 
 ### End-to-End Validation
@@ -465,7 +465,7 @@ When returning to this project after extended downtime, follow this checklist.
 - [ ] Execute a test student creation via `add_student.html`
 - [ ] Verify the record appears in the frontend database viewer (`database.html`)
 - [ ] Verify the record appears via the backend API (`/api/full-database`)
-- [ ] Verify the record appears in MySQL Workbench or the Aiven console
+- [ ] Verify the record appears in MySQL Workbench or the TiDB Cloud console
 
 ---
 
