@@ -93,7 +93,7 @@
 |-----------|------|-------------|
 | **GitHub Pages** | Frontend Host | Serves all static HTML, CSS, and JavaScript assets |
 | **Flask API** | Backend Service | Validates input, handles business logic, and writes to the database |
-| **TiDB Cloud** | Database Layer | Managed TiDB Serverless with SSL/TLS and cascading relational integrity |
+| **TiDB Cloud** | Database Layer | Managed TiDB Serverless with SSL/TLS and cascading relational integrity, sb8787878 |
 | **Gunicorn** | WSGI Server | Production-grade process manager for the Flask application on Render |
 | **script.js** | API Client | All `fetch()` calls to the Render backend originate here |
 
